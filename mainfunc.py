@@ -1,3 +1,6 @@
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
+
 import argparse
 import os
 import json
@@ -27,13 +30,13 @@ def readfiles(infile):
     return lines
 
 
-def step1(dataset, datatype, split, max_tokens, engine, prompt, pid, n, temp, top_k):
+def step1(dataset, datatype, split, max_tokens, engine, prompt, pid, n, temp, prompt_type):
 
     inputfile = f'indatasets/{dataset}/{dataset}-{split}.jsonl'
     inlines = readfiles(inputfile)
 
     if (temp is None) or (temp == 0):
-        outputfolder = f'backgrounds-greedy-{engine}-top{top_k}/{dataset}'
+        outputfolder = f'backgrounds-greedy-{engine}-top{prompt_type}/{dataset}'
     else: # tempature > 0
         outputfolder = f'backgrounds-sample(n={n},temp={temp})-{engine}/{dataset}'
     os.makedirs(outputfolder, exist_ok=True)
@@ -42,26 +45,25 @@ def step1(dataset, datatype, split, max_tokens, engine, prompt, pid, n, temp, to
     run_main(inlines, outputfile, engine, prompt, max_tokens, n, temp, parse_url=True)
 
     if datatype == 'question answering': ## Eval Recall@K score
-        recallfile = f'{outputfolder}/{dataset}-recall@{top_k}.jsonl'
+        recallfile = f'{outputfolder}/{dataset}-recall-{prompt_type}.jsonl'
         with open(recallfile, 'a') as recallout:
             recall, length = eval_recall(outputfile)
             outmetrics = {
                 'outputfile': outputfile,
                 'prompt': prompt,
-                f'recall@{top_k}': recall,
+                'recall': recall,
                 'length': length,
             }
-            print(f'Recall@{top_k}: {recall}; Avg.Length: {length}')
+            print(f'Recall: {recall}; Avg.Length: {length}')
             recallout.write(json.dumps(outmetrics) + '\n')
 
 
-def step2(dataset, datatype, split, max_tokens, engine, prompt, pid, top_k):
+def step2(dataset, datatype, split, max_tokens, engine, prompt, pid, prompt_type):
     # processed only used for passage
-    inputfile = f'backgrounds-greedy-{engine}-top{top_k}/{dataset}/{dataset}-{split}-p{pid}.jsonl'
-    # inputfile = f'backgrounds-greedy-{engine}-top{top_k}/{dataset}/{dataset}-{split}-p{pid}.jsonl'
+    inputfile = f'backgrounds-greedy-{engine}-{prompt_type}/{dataset}/{dataset}-{split}-p{pid}.jsonl'
     inlines = readfiles(inputfile)
 
-    outputfolder = f'finaloutput-greedy-{engine}-top{top_k}/{dataset}'
+    outputfolder = f'finaloutput-greedy-{engine}-{prompt_type}/{dataset}'
     os.makedirs(outputfolder, exist_ok=True)
     outputfile = f'{outputfolder}/{dataset}-{split}-p{pid}.jsonl'
     
@@ -119,10 +121,7 @@ if __name__ == "__main__":
     parser.add_argument("--task", default=None, type=str, required=True,
         help="task name: [step1, step2], should be either 1 or 2",
     )
-    parser.add_argument("--top_k", default=1, type=int, required=True,
-        help="document to fetch: [1, 10]",
-    )
-    parser.add_argument("--prompt", default="single_doc", type=str, required=False,
+    parser.add_argument("--prompt_type", default="single_doc", type=str, required=False,
         help="prompt type: [single_doc, multi_doc]"                    
     )
     parser.add_argument("--split", default=None, type=str, required=True,
@@ -154,7 +153,7 @@ if __name__ == "__main__":
         else: # QA and Fact ...
             max_tokens = 10
 
-    promptpath = f'inprompts/{args.prompt}.jsonl'
+    promptpath = f'inprompts/{args.prompt_type}.jsonl'
     if not os.path.exists(promptpath):
         raise FileNotFoundError(f'Prompt file {promptpath} not found.')
     promptlines = open(promptpath, 'r').readlines()
@@ -168,11 +167,11 @@ if __name__ == "__main__":
 
             if args.task == 'step1':
                 outputs = step1(args.dataset, datatype, args.split, max_tokens, args.engine, 
-                    prompt, pid, args.num_sequence, args.temperature, args.top_k)
+                    prompt, pid, args.num_sequence, args.temperature, args.prompt_type)
 
             elif args.task == 'step2':
                 outputs = step2(args.dataset, datatype, args.split, 
-                    max_tokens, args.engine, prompt, pid, args.top_k)
+                    max_tokens, args.engine, prompt, pid, args.prompt_type)
 
             else:  ## should be either 1 or 2
                 raise NotImplementedError(f'Invalid task given: {args.task} (should be either 1 or 2)')

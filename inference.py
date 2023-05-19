@@ -1,6 +1,5 @@
 import openai
 import os
-import time
 import json
 import _thread
 import requests
@@ -15,8 +14,6 @@ from collections import defaultdict
 
 import re
 link_regex = re.compile('((https?):((//)|(\\\\))+([\w\d:#@%/;$()~_?\+-=\\\.&](#!)?)*)', re.DOTALL)
-
-openai.api_key = ""
 
 class TimeoutException(Exception):
     def __init__(self, msg=''):
@@ -125,8 +122,8 @@ class OAIOverloadedException(Exception):
 @retry((OAIOverloadedException, Exception), tries=50, delay=10)
 def openai_request(inputs_with_prompts, engine, max_tokens, num_sequence=1, temp=0):
     headers = {
-        'Content-Type': "application/json",
-        'Authorization': "Bearer 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"
+        'Content-Type': "application/json", 
+        'Authorization': f"Bearer {os.getenv('OPENAI_API_KEY')}" # Dont share api keys 🫠
     }
     params = {
         "model": engine,
