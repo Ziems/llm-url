@@ -36,9 +36,9 @@ def step1(dataset, datatype, split, max_tokens, engine, prompt, pid, n, temp, pr
     inlines = readfiles(inputfile)
 
     if (temp is None) or (temp == 0):
-        outputfolder = f'backgrounds-greedy-{engine}-{prompt_type}/{dataset}'
+        outputfolder = f'logs/backgrounds-greedy-{engine}-{prompt_type}/{dataset}'
     else: # tempature > 0
-        outputfolder = f'backgrounds-sample(n={n},temp={temp})-{engine}/{dataset}'
+        outputfolder = f'logs/backgrounds-sample(n={n},temp={temp})-{engine}/{dataset}'
     os.makedirs(outputfolder, exist_ok=True)
     outputfile = f'{outputfolder}/{dataset}-{split}-p{pid}.jsonl'
     
@@ -60,10 +60,10 @@ def step1(dataset, datatype, split, max_tokens, engine, prompt, pid, n, temp, pr
 
 def step2(dataset, datatype, split, max_tokens, engine, prompt, pid, prompt_type):
     # processed only used for passage
-    inputfile = f'backgrounds-greedy-{engine}-{prompt_type}/{dataset}/{dataset}-{split}-p{pid}.jsonl'
+    inputfile = f'logs/backgrounds-greedy-{engine}-{prompt_type}/{dataset}/{dataset}-{split}-p{pid}.jsonl'
     inlines = readfiles(inputfile)
 
-    outputfolder = f'finaloutput-greedy-{engine}-{prompt_type}/{dataset}'
+    outputfolder = f'logs/finaloutput-greedy-{engine}-{prompt_type}/{dataset}'
     os.makedirs(outputfolder, exist_ok=True)
     outputfile = f'{outputfolder}/{dataset}-{split}-p{pid}.jsonl'
     
@@ -124,7 +124,7 @@ if __name__ == "__main__":
     parser.add_argument("--prompt_type", default="single_doc", type=str, required=False,
         help="prompt type: [single_doc, multi_doc]"                    
     )
-    parser.add_argument("--split", default=None, type=str, required=True,
+    parser.add_argument("--split", default='test', type=str, required=False,
         help="dataset split: [train, dev, test]",
     )
     parser.add_argument("--engine", default='text-davinci-003', type=str, required=False,

@@ -2,7 +2,7 @@
 
 ### Introduction & Setup
 
-This repository contains the code for the paper [Large Language Models are Built-in Autoregressive Search Engines]().
+This repository contains the code for the paper [Large Language Models are Built-in Autoregressive Search Engines](https://arxiv.org/abs/2305.09612)(Accepted to ACL Findings 2023).
 
 - To get started, clone this repository and install the requirements:
 
@@ -12,18 +12,16 @@ cd llm-url
 pip install -r requirements.txt
 ```
 
-- Add your api key in `inference.py` at `openai.api_key` (line 12)
+- Rename `.env.template` to `.env` then add your openai api key
 
 - Download the NQ and TriviaQA (tqa) datasets from Google drive: (we unified the formats) [\[link\]](https://drive.google.com/drive/folders/1lFFTklW_0HuR53hLpFdLClgfSAhXn_2f?usp=sharing) then put these directories in the `indatasets` directory along with WebQ which is already there.
 
-- Run retrieval (step1) on the dataset and prompt of choice (pid of 1 retrieves a single document, pid of 2 retrieves 10)
+- Run retrieval (step1) on the dataset
     
 ```bash
 python3 mainfunc.py
   --dataset {dataset}
   --task step1
-  --split test
-  --pid {pid}
 ```
 
 - Run answer generation (step2):
@@ -32,8 +30,6 @@ python3 mainfunc.py
 python3 mainfunc.py
   --dataset {dataset}
   --task step2
-  --split test
-  --pid {pid}
 ```
 
 ## Citation
