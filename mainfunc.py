@@ -36,7 +36,7 @@ def step1(dataset, datatype, split, max_tokens, engine, prompt, pid, n, temp, pr
     inlines = readfiles(inputfile)
 
     if (temp is None) or (temp == 0):
-        outputfolder = f'backgrounds-greedy-{engine}-top{prompt_type}/{dataset}'
+        outputfolder = f'backgrounds-greedy-{engine}-{prompt_type}/{dataset}'
     else: # tempature > 0
         outputfolder = f'backgrounds-sample(n={n},temp={temp})-{engine}/{dataset}'
     os.makedirs(outputfolder, exist_ok=True)
