@@ -34,13 +34,14 @@ python3 mainfunc.py
 
 ## Citation
 ```
-@misc{ziems2023large,
-      title={Large Language Models are Built-in Autoregressive Search Engines}, 
-      author={Noah Ziems and Wenhao Yu and Zhihan Zhang and Meng Jiang},
-      year={2023},
-      eprint={2305.09612},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@inproceedings{ziems-2023-large,
+    title = "Large Language Models are Built-in Autoregressive Search Engines",
+    author = "Ziems, Noah  and
+      Yu, Wenhao  and
+      Zhang, Zhihan  and
+      Jiang, Meng",
+    booktitle = "Findings of the Association for Computational Linguistics: ACL 2023",
+    year = "2023",
 }
 ```
 Please feel free to cite our paper if you find this repository helpful in your research.
