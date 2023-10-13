@@ -41,7 +41,7 @@ python3 mainfunc.py
       Zhang, Zhihan  and
       Jiang, Meng",
     booktitle = "Findings of the Association for Computational Linguistics: ACL 2023",
-    year = "2023",
+    year = "2023"
 }
 ```
 Please feel free to cite our paper if you find this repository helpful in your research.
