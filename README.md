@@ -2,7 +2,7 @@
 
 ### Introduction & Setup
 
-This repository contains the code for the paper [Large Language Models are Built-in Autoregressive Search Engines](https://arxiv.org/abs/2305.09612)(Accepted to ACL Findings 2023).
+This repository contains the code for the paper [Large Language Models are Built-in Autoregressive Search Engines](https://arxiv.org/abs/2305.09612)(Accepted to ACL 2023).
 
 - To get started, clone this repository and install the requirements:
 
